@@ -16,7 +16,7 @@ public class ArrowkeySquare extends Square implements Animatable
    // constructors
    public ArrowkeySquare()
    {
-      super(3, 80, 25, 200, Color.WHITE);
+      super(20, 30, 25, 200, Color.WHITE);
       dX = 0;
       dY = 0;
    }

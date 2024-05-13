@@ -12,7 +12,7 @@ public class KeyInputPanel extends JPanel
    
    //Most of this is the same as AnimationPanel
    public static final int FRAME = 500;
-   private static final Color BACKGROUND = Color.BLACK;
+   private static final Color BACKGROUND = Color.GREEN.darker();
    
    private BufferedImage myImage;  
    private Graphics myBuffer;
@@ -30,6 +30,8 @@ public class KeyInputPanel extends JPanel
    private boolean down;
    private boolean arrowup;
    private boolean arrowdown;
+   private boolean arrowleft;
+   private boolean arrowright;
    
    //And we need to declare our square we can control with arrow keys as a field, separately from 
    //the arraylist, so we can give it specific commands outside the constructor.
@@ -45,10 +47,14 @@ public class KeyInputPanel extends JPanel
    //constructors
    public KeyInputPanel()
    {
-      myImage =  new BufferedImage(640, 480, BufferedImage.TYPE_INT_RGB); 
+      ImageIcon soccer = new ImageIcon("field.jpg");
+      myImage =  new BufferedImage(1920, 1080, BufferedImage.TYPE_INT_RGB); 
       myBuffer = myImage.getGraphics(); 
-      myBuffer.setColor(BACKGROUND);    
+      myBuffer.drawImage(soccer.getImage(), 0, 0, 1920, 1080, null);
+     /* myBuffer.setColor(BACKGROUND);
       myBuffer.fillRect(0,0,640,480);
+      myBuffer.setColor(Color.WHITE);  
+      myBuffer.fillRect(50, 50, 540, 380); */
       
       animationObjects = new ArrayList<Animatable>();  
       
@@ -56,10 +62,10 @@ public class KeyInputPanel extends JPanel
       sq = new ArrowkeySquare(); //DO NOT RE-DECLARE sq - it's a field, it's already declared.  Just assign.
       animationObjects.add(sq); //We want sq to be animated, and also want to give sq other commands, so we 
                                 //add sq to the arraylist and also refer to it as sq separaetly.
-      aq = new ArrowkeySquare(3, 80, 612, 200, Color.WHITE);
+      aq = new ArrowkeySquare(20, 30, 612, 200, Color.WHITE);
       animationObjects.add(aq);
       
-      cr = new BouncingSquare(); //Instantiate an inflating circle...
+      cr = new BouncingSquare(); //Instantiate a bouncing square
       animationObjects.add(cr);
       
       score1 = 0;
@@ -78,6 +84,8 @@ public class KeyInputPanel extends JPanel
       down = false; 
       arrowup = false;
       arrowdown = false; 
+      arrowright = false;
+      arrowleft = false;
    }
    
    
@@ -95,8 +103,11 @@ public class KeyInputPanel extends JPanel
    public void animate()
    {      
       //Clear the current state of myImage by writing over it with a new blank background
-      myBuffer.setColor(BACKGROUND);
-      myBuffer.fillRect(0,0,640,480);
+      //myBuffer.setColor(BACKGROUND);
+      //myBuffer.fillRect(0,0,640,480);
+      ImageIcon soccer = new ImageIcon("field.jpg");
+      myBuffer.drawImage(soccer.getImage(), 0, 0, 1920, 1080, null);
+
       
       //Loop through the ArrayList of Animatable objects; do an animation step on each one & draw it
       for(Animatable animationObject : animationObjects)
@@ -173,9 +184,9 @@ public class KeyInputPanel extends JPanel
                cr.setDY(5);
             } 
          }
-         if(cr.getX() >= (640 - cr.getXSide()) || cr.getX() <= 0)
+         if(cr.getX() >= (1920 - cr.getXSide())|| cr.getX() <= 0)
          {
-            if(cr.getX() >= (640 - cr.getXSide()))
+            if(cr.getX() >= (1920 - cr.getXSide()))
             {
                score2++;
             }
@@ -207,7 +218,7 @@ public class KeyInputPanel extends JPanel
       }
       myBuffer.setFont(new Font("Serif", Font.BOLD, 30));  //We'll use size 30 serif font, bold AND italic.
       myBuffer.setColor(Color.WHITE);
-      myBuffer.drawString(Integer.toString(score2), 605, 30); 
+      myBuffer.drawString(Integer.toString(score2), 1885, 30); 
       
       myBuffer.setFont(new Font("Serif", Font.BOLD, 30));  //We'll use size 30 serif font, bold AND italic.
       myBuffer.setColor(Color.WHITE);
@@ -221,7 +232,7 @@ public class KeyInputPanel extends JPanel
    
    //private classes
    
-   private class AnimationListener implements ActionListener
+   public class AnimationListener implements ActionListener
    {
       public void actionPerformed(ActionEvent e)  //Gets called over and over by the Timer
       {
@@ -229,7 +240,7 @@ public class KeyInputPanel extends JPanel
       }
    }
    
-   private class Key extends KeyAdapter //Make ONE class that EXTENDS KeyAdapter, and tell it what to do when keys are pressed or released
+   public class Key extends KeyAdapter //Make ONE class that EXTENDS KeyAdapter, and tell it what to do when keys are pressed or released
    {
       public void keyPressed(KeyEvent e) //Make ONE method for key presses; this is overridden, and will be called whenever a key is pressed
       {
@@ -253,8 +264,27 @@ public class KeyInputPanel extends JPanel
             sq.setDY(sq.getDY() + 5);
             arrowdown = true;
          }  
-         
-         
+         if(e.getKeyCode() == KeyEvent.VK_RIGHT && !right)
+         {
+            aq.setDX(aq.getDX() + 5);
+            right = true;
+         }
+         if(e.getKeyCode() == KeyEvent.VK_LEFT && !left)
+         {
+            aq.setDX(aq.getDX() -5);
+            left = true;
+         }
+         if(e.getKeyCode() == KeyEvent.VK_D && !arrowright)
+         {
+            sq.setDX(sq.getDX() + 5);
+            arrowright = true;
+         }
+         if(e.getKeyCode() == KeyEvent.VK_A && !arrowleft)
+         {
+            sq.setDX(sq.getDX() -5);
+            arrowleft = true;
+         }
+
          
          // write code for the other keys here
          
@@ -273,6 +303,16 @@ public class KeyInputPanel extends JPanel
             aq.setDY(aq.getDY() - 5);
             down = false;
          }  
+         if(e.getKeyCode() == KeyEvent.VK_RIGHT)
+         {   
+            aq.setDX(aq.getDX() -5);
+            right = false;
+         }  
+         if(e.getKeyCode() == KeyEvent.VK_LEFT)
+         {   
+            aq.setDX(aq.getDX() +5);
+            left = false;
+         }  
          if(e.getKeyCode() == KeyEvent.VK_W)
          {   
             sq.setDY(sq.getDY() + 5);
@@ -283,6 +323,17 @@ public class KeyInputPanel extends JPanel
             sq.setDY(sq.getDY() - 5);
             arrowdown = false;
          }  
+         if(e.getKeyCode() == KeyEvent.VK_D)
+         {   
+            sq.setDX(sq.getDX() - 5);
+            arrowright = false;
+         }  
+         if(e.getKeyCode() == KeyEvent.VK_A)
+         {   
+            sq.setDX(sq.getDX() + 5);
+            arrowleft = false;
+         }  
+
          
          //write code for the other keys here
          
