@@ -3,14 +3,14 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 
-public class BouncingSquare extends Square implements Animatable
+public class BouncingSquare extends Ball implements Animatable
 {
    private int dX;
    private int dY;
    
    public BouncingSquare()
    {
-      super(20, 20, 310, 230, Color.WHITE);
+      super(50,50, 960, 540, Color.WHITE);
       double randomOfTwoInts = (Math.random());
       if(randomOfTwoInts < 0.5)
       {
@@ -22,12 +22,13 @@ public class BouncingSquare extends Square implements Animatable
       }
       dY = -3 + (int)(Math.random() * 6);
    }
-   public BouncingSquare(int sideValue, int sideValuey, int xVal, int yVal, Color cVal, int dXVal, int dYVal)
+  /* public BouncingSquare(int sideValue, int sideValuey, int xVal, int yVal, int dXVal, int dYVal)
    {
-      super(sideValue, sideValuey, xVal, yVal, cVal);
+      super(sideValue, sideValuey, xVal, yVal );
       dX = dXVal;
       dY = dYVal;
    }
+   */
    public int getDX()
    {
       return dX;
@@ -46,9 +47,13 @@ public class BouncingSquare extends Square implements Animatable
    }
    public void step()
    {
-      if(getY() >= (480 - getYSide()) || getY() <= 0)
+      if(getY() >= (1080 - getYSide()) || getY() <= 0)
       {
          dY *= -1;
+      }
+      if(getX() >= (1920 - getXSide()) || getX() <= 0)
+      {
+         dX *= -1;
       }
       setX(getX() + dX);  
       setY(getY() + dY);
