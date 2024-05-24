@@ -61,16 +61,35 @@ class SwapperOne extends JPanel
    {
       myOwner = p;  //Store a reference to the PanelSwapPanel that I belong to (!)
       
-      setPreferredSize(new Dimension(300, 300)); //Set size here.
+      //setPreferredSize(new Dimension(300, 300)); //Set size here.
             
-      setLayout(new GridLayout(1, 2));
+      setLayout(new GridLayout(2, 2));
       
-      JButton switcheroo1 = new JButton("Single Player");
+      //"<html>Welcome to ARCADE SOCCER! A quality freestyle soccer game<br/>where you can play with your friends or just by yourself against<br/>our built-in bot<html>"
+      JButton soccer = new JButton();
+      soccer.setBackground(Color.BLACK);
+      soccer.setIcon(new javax.swing.ImageIcon(getClass().getResource("jlabelsoccer.jpg")));
+      //soccer.setFont(new Font("Retro Gaming", Font.BOLD, 30));
+      //soccer.setBorder(BorderFactory.createMatteBorder(100, 100, 100, 100, Color.BLACK));
+      soccer.setHorizontalAlignment(SwingConstants.CENTER);
+      soccer.setEnabled(true);
+      add(soccer);
+      JButton switcheroo1 = new JButton("Single-Player");
+      switcheroo1.setFont(new Font("Retro Gaming", Font.BOLD, 30));
+      switcheroo1.setBackground(Color.RED);
+      switcheroo1.setBorder(BorderFactory.createMatteBorder(10, 10, 10, 10, Color.RED.darker()));
       switcheroo1.addActionListener(new SwitchListener());
       add(switcheroo1);
-      JButton switcheroo2 = new JButton("Multi Player");
+      JButton switcheroo2 = new JButton("Multi-Player");
+      switcheroo2.setFont(new Font("Retro Gaming", Font.BOLD, 30));
+      switcheroo2.setBackground(Color.BLUE);
+      switcheroo2.setBorder(BorderFactory.createMatteBorder(10, 10, 10, 10, Color.BLUE.darker()));
       switcheroo2.addActionListener(new SwitchListener());
       add(switcheroo2);
+      JLabel switcheroo3 = new JLabel("<html>Welcome to ARCADE SOCCER! A quality freestyle soccer game<br/>where you can play with your friends or just by yourself against<br/>our built-in bot<html>");
+      add(switcheroo3);
+      switcheroo3.setFont(new Font("Retro Gaming", Font.BOLD, 30));
+      switcheroo3.setHorizontalAlignment(SwingConstants.CENTER);
    }
    
    private class SwitchListener implements ActionListener

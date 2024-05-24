@@ -32,6 +32,7 @@ public class KeyInputPanel extends JPanel
    private boolean arrowdown;
    private boolean arrowleft;
    private boolean arrowright;
+   private boolean leftshift;
    
    //And we need to declare our square we can control with arrow keys as a field, separately from 
    //the arraylist, so we can give it specific commands outside the constructor.
@@ -86,6 +87,7 @@ public class KeyInputPanel extends JPanel
       arrowdown = false; 
       arrowright = false;
       arrowleft = false;
+      leftshift = false;
    }
    
    
@@ -114,7 +116,7 @@ public class KeyInputPanel extends JPanel
       {
          if(cr.collide(sq))
          {
-            if(cr.getDX() > 0)
+            /*if(cr.getDX() > 0)
             {
                cr.setDX(-7);
             }
@@ -147,66 +149,138 @@ public class KeyInputPanel extends JPanel
             {
                cr.setDY(5);
             } 
+            */
+            double threefourths = 3/4;
+            if((int)(cr.getX() + cr.getXSide()/2) > (int)(sq.getX() + sq.getXSide()/2))
+            {
+               cr.setDX(7);
+               if((int)(sq.getY() + sq.getYSide()/2) > cr.getY() && (int)(sq.getY() + sq.getYSide()/2) < (int)(cr.getX() + cr.getXSide()/4))
+               {
+                  cr.setDY(-5);
+               }
+               if((int)(sq.getY() + sq.getYSide()/2) > (int)(cr.getX() + cr.getXSide()/4) && (int)(sq.getY() + sq.getYSide()/2) < (int)(cr.getX() + cr.getXSide()/2))
+               {
+                  cr.setDY(-2);
+               }
+               if((int)(sq.getY() + sq.getYSide()/2) > (int)(cr.getX() + cr.getXSide()/2) && (int)(sq.getY() + sq.getYSide()/2) < (int)(cr.getX() + cr.getXSide()*threefourths))
+               {
+                  cr.setDY(2);
+               }
+               if((int)(sq.getY() + sq.getYSide()/2) > (int)(cr.getX() + cr.getXSide()*threefourths) && (int)(sq.getY() + sq.getYSide()/2) < (int)(cr.getX() + cr.getXSide()))
+               {
+                  cr.setDY(5);
+               }
+            }
+            if((int)(cr.getX() + cr.getXSide()/2) < (int)(sq.getX() + sq.getXSide()/2))
+            {
+               cr.setDX(-7);
+               if((int)(sq.getY() + sq.getYSide()/2) > cr.getY() && (int)(sq.getY() + sq.getYSide()/2) < (int)(cr.getX() + cr.getXSide()/4))
+               {
+                  cr.setDY(-5);
+               }
+               if((int)(sq.getY() + sq.getYSide()/2) > (int)(cr.getX() + cr.getXSide()/4) && (int)(sq.getY() + sq.getYSide()/2) < (int)(cr.getX() + cr.getXSide()/2))
+               {
+                  cr.setDY(-2);
+               }
+               if((int)(sq.getY() + sq.getYSide()/2) > (int)(cr.getX() + cr.getXSide()/2) && (int)(sq.getY() + sq.getYSide()/2) < (int)(cr.getX() + cr.getXSide()*threefourths))
+               {
+                  cr.setDY(2);
+               }
+               if((int)(sq.getY() + sq.getYSide()/2) > (int)(cr.getX() + cr.getXSide()*threefourths) && (int)(sq.getY() + sq.getYSide()/2) < (int)(cr.getX() + cr.getXSide()))
+               {
+                  cr.setDY(5);
+               }
+            }
          }
          if(cr.collide(aq))
          {
-            if(cr.getDX() < 0)
+            double threefourths = 3/4;
+            if((int)(cr.getX() + cr.getXSide()/2) > (int)(aq.getX() + aq.getXSide()/2))
             {
                cr.setDX(7);
+               if((int)(aq.getY() + aq.getYSide()/2) > cr.getY() && (int)(aq.getY() + aq.getYSide()/2) < (int)(cr.getX() + cr.getXSide()/4))
+               {
+                  cr.setDY(-5);
+               }
+               if((int)(aq.getY() + aq.getYSide()/2) > (int)(cr.getX() + cr.getXSide()/4) && (int)(aq.getY() + aq.getYSide()/2) < (int)(cr.getX() + cr.getXSide()/2))
+               {
+                  cr.setDY(-2);
+               }
+               if((int)(aq.getY() + aq.getYSide()/2) > (int)(cr.getX() + cr.getXSide()/2) && (int)(aq.getY() + aq.getYSide()/2) < (int)(cr.getX() + cr.getXSide()*threefourths))
+               {
+                  cr.setDY(2);
+               }
+               if((int)(aq.getY() + aq.getYSide()/2) > (int)(cr.getX() + cr.getXSide()*threefourths) && (int)(aq.getY() + aq.getYSide()/2) < (int)(cr.getX() + cr.getXSide()))
+               {
+                  cr.setDY(5);
+               }
             }
-            if(cr.getDX() > 0)
+            if((int)(cr.getX() + cr.getXSide()/2) < (int)(aq.getX() + aq.getXSide()/2))
             {
                cr.setDX(-7);
+               if((int)(aq.getY() + aq.getYSide()/2) > cr.getY() && (int)(aq.getY() + aq.getYSide()/2) < (int)(cr.getX() + cr.getXSide()/4))
+               {
+                  cr.setDY(-5);
+               }
+               if((int)(aq.getY() + aq.getYSide()/2) > (int)(cr.getX() + cr.getXSide()/4) && (int)(aq.getY() + aq.getYSide()/2) < (int)(cr.getX() + cr.getXSide()/2))
+               {
+                  cr.setDY(-2);
+               }
+               if((int)(aq.getY() + aq.getYSide()/2) > (int)(cr.getX() + cr.getXSide()/2) && (int)(aq.getY() + aq.getYSide()/2) < (int)(cr.getX() + cr.getXSide()*threefourths))
+               {
+                  cr.setDY(2);
+               }
+               if((int)(aq.getY() + aq.getYSide()/2) > (int)(cr.getX() + cr.getXSide()*threefourths) && (int)(aq.getY() + aq.getYSide()/2) < (int)(cr.getX() + cr.getXSide()))
+               {
+                  cr.setDY(5);
+               }
             }
-            int j = (cr.getY()+10);
-            if( j < (aq.getY() + 13))
-            {
-               cr.setDY(-5);
-            }
-            if( j > (aq.getY() + 13) && j < (aq.getY() + 26))
-            {
-               cr.setDY(-3);
-            }
-            if( j > (aq.getY() + 26) && j < (aq.getY() + 40))
-            {
-               cr.setDY(-1);
-            }
-            if( j > (aq.getY() + 40) && j < (aq.getY() + 53))
-            {
-               cr.setDY(1);
-            }
-            if( j > (aq.getY() + 53) && j < (aq.getY() + 67))
-            {
-               cr.setDY(3);
-            }
-            if( j >= (aq.getY() + 67))
-            {
-               cr.setDY(5);
-            } 
          }
-         if(cr.getX() >= (1920 - cr.getXSide())|| cr.getX() <= 0)
+         if(cr.getX() >= (1920 - cr.getXSide()) || cr.getX() <= 0)
          {
-            if(cr.getX() >= (1920 - cr.getXSide()))
+            if(cr.getX() >= (1920 - cr.getXSide()) && cr.getY() > 440 && (cr.getY() + cr.getYSide()) < 640)
             {
                score2++;
+               cr.setX(960);
+               cr.setY(540);
+               double randomOfTwoInts = Math.random();
+               if(randomOfTwoInts < 0.5)
+               {
+                  cr.setDX(-4);
+               }
+               else if(randomOfTwoInts >= 0.5)
+               {
+                  cr.setDX(4);
+               }
+               cr.setDY(-3 + (int)(Math.random() * 6));
             }
-            if(cr.getX() <= 0)
+            if(cr.getX() <= 0 && cr.getY() > 440 && (cr.getY() + cr.getYSide()) < 640)
             {
                score1++;
+               cr.setX(960);
+               cr.setY(540);
+               double randomOfTwoInts = Math.random();
+               if(randomOfTwoInts < 0.5)
+               {
+                  cr.setDX(-4);
+               }
+               else if(randomOfTwoInts >= 0.5)
+               {
+                  cr.setDX(4);
+               }
+               cr.setDY(-3 + (int)(Math.random() * 6));
             }
-            cr.setX(960);
-            cr.setY(540);
-            
-            double randomOfTwoInts = Math.random();
-            if(randomOfTwoInts < 0.5)
+            else
             {
-               cr.setDX(-4);
+               if(cr.getX() >= (1920 - cr.getXSide()))
+               {
+                  cr.setDX(4);
+               }
+               if(cr.getX() <= 0)
+               {
+                  cr.setDX(-4);
+               } 
             }
-            else if(randomOfTwoInts >= 0.5)
-            {
-               cr.setDX(4);
-            }
-            cr.setDY(-3 + (int)(Math.random() * 6));
          }
          if(score1 >= 15 || score2 >=15)
          {
@@ -259,6 +333,26 @@ public class KeyInputPanel extends JPanel
             sq.setDY(sq.getDY() - 5);
             arrowup = true;
          }  
+         if(e.getKeyCode() == KeyEvent.VK_SHIFT && !leftshift)
+         {  
+            if(sq.getDX() > 0)
+            {
+               sq.setDX(sq.getDX() + 5);
+            }
+            if(sq.getDX() < 0)
+            {
+               sq.setDX(sq.getDX() - 5);
+            }
+            if(sq.getDY() > 0)
+            {
+               sq.setDY(sq.getDY() + 5);
+            }
+            if(sq.getDX() < 0)
+            {
+               sq.setDY(sq.getDY() - 5);
+            }
+            leftshift = true;
+         } 
          if(e.getKeyCode() == KeyEvent.VK_S && !arrowdown)
          {   
             sq.setDY(sq.getDY() + 5);
@@ -312,6 +406,26 @@ public class KeyInputPanel extends JPanel
          {   
             aq.setDX(aq.getDX() +5);
             left = false;
+         }  
+         if(e.getKeyCode() == KeyEvent.VK_SHIFT)
+         {   
+            if(sq.getDX() > 0)
+            {
+               sq.setDX(sq.getDX() - 5);
+            }
+            if(sq.getDX() < 0)
+            {
+               sq.setDX(sq.getDX() + 5);
+            }
+            if(sq.getDY() > 0)
+            {
+               sq.setDY(sq.getDY() - 5);
+            }
+            if(sq.getDX() < 0)
+            {
+               sq.setDY(sq.getDY() + 5);
+            }
+            leftshift = false;
          }  
          if(e.getKeyCode() == KeyEvent.VK_W)
          {   
