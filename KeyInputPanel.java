@@ -22,6 +22,7 @@ public class KeyInputPanel extends JPanel
    
    private Timer t;
    private Timer shiftTimer;
+   private Timer shiftTimer1;
    private Timer slowDownTimer;
 
    private ArrayList<Animatable> animationObjects;
@@ -37,6 +38,7 @@ public class KeyInputPanel extends JPanel
    private boolean arrowleft;
    private boolean arrowright;
    private boolean leftshift;
+   private boolean zero;
    
    //And we need to declare our square we can control with arrow keys as a field, separately from 
    //the arraylist, so we can give it specific commands outside the constructor.
@@ -94,6 +96,7 @@ public class KeyInputPanel extends JPanel
       arrowright = false;
       arrowleft = false;
       leftshift = false;
+      zero = false;
    }
    
    
@@ -142,6 +145,7 @@ public class KeyInputPanel extends JPanel
          if(cr.collide(sq))
          {
             double threefourths = 3/4;
+            double twothirds = 2/3;
             if((int)(cr.getX() + cr.getXSide()/2) > (int)(sq.getX() + sq.getXSide()/2))
             {
                cr.setDX(7);
@@ -153,11 +157,11 @@ public class KeyInputPanel extends JPanel
                {
                   cr.setDY(-2);
                }
-               if((int)(cr.getY() + cr.getYSide()/2) > (int)(sq.getY() + sq.getXSide()/2) && (int)(cr.getY() + cr.getYSide()/2) < (int)(sq.getY() + sq.getXSide()*threefourths))
+               if((int)(cr.getY() + cr.getYSide()/2) > (int)(sq.getY() + sq.getXSide()/2) && (int)(cr.getY() + cr.getYSide()/2) < (int)(sq.getY() + 3*(int)(sq.getXSide()/4)))
                {
                   cr.setDY(2);
                }
-               if((int)(cr.getY() + cr.getYSide()/2) > (int)(sq.getY() + sq.getXSide()*threefourths))
+               if((int)(cr.getY() + cr.getYSide()/2) > (int)(sq.getY() + 3*(int)(sq.getXSide()/4)))
                {
                   cr.setDY(5);
                }
@@ -173,11 +177,11 @@ public class KeyInputPanel extends JPanel
                {
                   cr.setDY(-2);
                }
-               if((int)(cr.getY() + cr.getYSide()/2) > (int)(sq.getY() + sq.getXSide()/2) && (int)(cr.getY() + cr.getYSide()/2) < (int)(sq.getY() + sq.getXSide()*threefourths))
+               if((int)(cr.getY() + cr.getYSide()/2) > (int)(sq.getY() + sq.getXSide()/2) && (int)(cr.getY() + cr.getYSide()/2) < (int)(sq.getY() + 3*(int)(sq.getXSide()/4)))
                {
                   cr.setDY(2);
                }
-               if((int)(cr.getY() + cr.getYSide()/2) > (int)(sq.getY() + sq.getXSide()*threefourths))
+               if((int)(cr.getY() + cr.getYSide()/2) > (int)(sq.getY() + 3*(int)(sq.getXSide()/4)))
                {
                   cr.setDY(5);
                }
@@ -197,11 +201,11 @@ public class KeyInputPanel extends JPanel
                {
                   cr.setDY(-2);
                }
-               if((int)(cr.getY() + cr.getYSide()/2) > (int)(aq.getY() + aq.getXSide()/2) && (int)(cr.getY() + cr.getYSide()/2) < (int)(aq.getY() + aq.getXSide()*threefourths))
+               if((int)(cr.getY() + cr.getYSide()/2) > (int)(aq.getY() + aq.getXSide()/2) && (int)(cr.getY() + cr.getYSide()/2) < (int)(aq.getY() + 3*(int)(aq.getXSide()/4)))
                {
                   cr.setDY(2);
                }
-               if((int)(cr.getY() + cr.getYSide()/2) > (int)(aq.getY() + aq.getXSide()*threefourths))
+               if((int)(cr.getY() + cr.getYSide()/2) > (int)(aq.getY() + 3*(int)(aq.getXSide()/4)))
                {
                   cr.setDY(5);
                }
@@ -217,11 +221,11 @@ public class KeyInputPanel extends JPanel
                {
                   cr.setDY(-2);
                }
-               if((int)(cr.getY() + cr.getYSide()/2) > (int)(aq.getY() + aq.getXSide()/2) && (int)(cr.getY() + cr.getYSide()/2) < (int)(aq.getY() + aq.getXSide()*threefourths))
+               if((int)(cr.getY() + cr.getYSide()/2) > (int)(aq.getY() + aq.getXSide()/2) && (int)(cr.getY() + cr.getYSide()/2) < (int)(aq.getY() + 3*(int)(aq.getXSide()/4)))
                {
                   cr.setDY(2);
                }
-               if((int)(cr.getY() + cr.getYSide()/2) > (int)(aq.getY() + aq.getXSide()*threefourths))
+               if((int)(cr.getY() + cr.getYSide()/2) > (int)(aq.getY() + 3*(int)(aq.getXSide()/4)))
                {
                   cr.setDY(5);
                }
@@ -357,6 +361,49 @@ public class KeyInputPanel extends JPanel
             });
             shiftTimer.start();
         }
+        private void startShiftTimer1(ArrowkeySquare c) 
+        {
+            shiftTimer1 = new Timer(100, new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    
+                        if(arrowright)
+                        {
+                           c.setDX(10);
+                        }
+                        if(arrowdown)
+                        {
+                           c.setDY(10);
+                        }
+                        if(arrowleft)
+                        {
+                           c.setDX(-10);
+                        }
+                        if(arrowup)
+                        {
+                           c.setDY(-10);
+                        }
+                        if(arrowright && arrowleft)
+                        {
+                           c.setDX(0);
+                        }
+                        if(arrowup && arrowdown)
+                        {
+                           c.setDY(0);
+                        }
+                        if(!arrowup && !arrowdown)
+                        {
+                           c.setDY(0);
+                        }
+                        if(!arrowleft && !arrowright)
+                        {
+                           c.setDX(0);
+                        }
+                       
+                    
+                }
+            });
+            shiftTimer1.start();
+        }
 
         private void stopShiftTimer(ArrowkeySquare c) {
             if (shiftTimer != null) {
@@ -373,7 +420,28 @@ public class KeyInputPanel extends JPanel
                 {
                     c.setDX(c.getDX() + 5);
                 }
-                if(sq.getDY() < 0)
+                if(c.getDY() < 0)
+                {
+                    c.setDY(c.getDY() + 5);
+                }
+            }
+        }
+        private void stopShiftTimer1(ArrowkeySquare c) {
+            if (shiftTimer1 != null) {
+                shiftTimer1.stop();
+                if(c.getDX() > 0)
+                {
+                     c.setDX(c.getDX() - 5);
+                }
+                if(c.getDY() > 0)
+                {
+                    c.setDY(c.getDY() - 5);
+                }
+                if(c.getDX() < 0)
+                {
+                    c.setDX(c.getDX() + 5);
+                }
+                if(c.getDY() < 0)
                 {
                     c.setDY(c.getDY() + 5);
                 }
@@ -425,6 +493,11 @@ public class KeyInputPanel extends JPanel
          {  
             startShiftTimer(sq);
             leftshift = true;
+         } 
+         if(e.getKeyCode() == KeyEvent.VK_INSERT && !zero)
+         {  
+            startShiftTimer1(aq);
+            zero = true;
          } 
 
          
@@ -479,6 +552,12 @@ public class KeyInputPanel extends JPanel
          {   
             stopShiftTimer(sq);
             leftshift = false;
+
+         } 
+         if(e.getKeyCode() == KeyEvent.VK_INSERT)
+         {   
+            stopShiftTimer1(aq);
+            zero = false;
 
          } 
 
