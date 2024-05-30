@@ -7,8 +7,9 @@ class PanelSwapPanel extends JPanel
    private JFrame myOwner;  //The JFrame that contains this panel (!)
    
    private SwapperOne subOne;  //A subpanel that will get swapped out for...
-   private KeyInputPanel subTwo;  //...a different subpanel
+   private SinglePlayerPanel subTwo;  //...a different subpanel
    private JLabel title;
+   private MultiPlayerPanel subThree;
    
    public PanelSwapPanel(JFrame f)
    {
@@ -23,7 +24,9 @@ class PanelSwapPanel extends JPanel
       subOne = new SwapperOne(this);  //Pass **MYSELF** to SwapperOne (!)
       add(subOne);
       
-      subTwo = new KeyInputPanel();
+      subTwo = new SinglePlayerPanel();
+      
+      subThree = new MultiPlayerPanel();
       //We **don't** add subTwo!  Just make sure it's ready.
    }
    public void switchSubpanels()
@@ -36,6 +39,18 @@ class PanelSwapPanel extends JPanel
       repaint();
       revalidate();
       subTwo.requestFocusInWindow();
+      myOwner.setSize(1920,1080);  //Again, note - I'm giving the JFrame that contains this panel a command! (!)
+   }
+   public void switchSubpanels1()
+   {
+      //All of these commands are necessary, in this order, to remove a subpanel,
+      //add another one, then cause the JFrame to figure itself out again, including
+      //resizing if necessary.  If you leave something out, you'll get weird behavior.
+      remove(subOne);
+      add(subThree);
+      repaint();
+      revalidate();
+      subThree.requestFocusInWindow();
       myOwner.setSize(1920,1080);  //Again, note - I'm giving the JFrame that contains this panel a command! (!)
    }
 }
@@ -65,7 +80,7 @@ class SwapperOne extends JPanel
       switcheroo1.setFont(new Font("Retro Gaming", Font.BOLD, 30));
       switcheroo1.setBackground(Color.RED);
       switcheroo1.setBorder(BorderFactory.createMatteBorder(10, 10, 10, 10, Color.RED.darker()));
-      switcheroo1.addActionListener(new SwitchListener());
+      switcheroo1.addActionListener(new SwitchListener1());
       add(switcheroo1);
       JButton switcheroo2 = new JButton("Multi-Player");
       switcheroo2.setFont(new Font("Retro Gaming", Font.BOLD, 30));
@@ -84,6 +99,13 @@ class SwapperOne extends JPanel
       public void actionPerformed(ActionEvent e)
       {
          myOwner.switchSubpanels();  //Send a command to the PanelSwapPanel that contains this one (!)
+      }
+   }
+   private class SwitchListener1 implements ActionListener
+   {
+      public void actionPerformed(ActionEvent e)
+      {
+         myOwner.switchSubpanels1();  //Send a command to the PanelSwapPanel that contains this one (!)
       }
    }
 }
