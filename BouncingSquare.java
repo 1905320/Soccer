@@ -10,7 +10,7 @@ public class BouncingSquare extends Ball implements Animatable
    
    public BouncingSquare()
    {
-      super(50,50, 960, 540, Color.WHITE);
+      super(50,50, 940, 520, Color.WHITE);
       double randomOfTwoInts = (Math.random());
       if(randomOfTwoInts < 0.5)
       {

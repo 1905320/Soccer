@@ -7,9 +7,9 @@ class PanelSwapPanel extends JPanel
    private JFrame myOwner;  //The JFrame that contains this panel (!)
    
    private SwapperOne subOne;  //A subpanel that will get swapped out for...
-   private SinglePlayerPanel subTwo;  //...a different subpanel
+   private SinglePlayerPanel subThree;  //...a different subpanel
    private JLabel title;
-   private MultiPlayerPanel subThree;
+   private MultiPlayerPanel subTwo;
    
    public PanelSwapPanel(JFrame f)
    {
@@ -24,9 +24,9 @@ class PanelSwapPanel extends JPanel
       subOne = new SwapperOne(this);  //Pass **MYSELF** to SwapperOne (!)
       add(subOne);
       
-      subTwo = new SinglePlayerPanel();
+      subTwo = new MultiPlayerPanel();
       
-      subThree = new MultiPlayerPanel();
+      subThree = new SinglePlayerPanel();
       //We **don't** add subTwo!  Just make sure it's ready.
    }
    public void switchSubpanels()

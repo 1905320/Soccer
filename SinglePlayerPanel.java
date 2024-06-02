@@ -24,6 +24,7 @@ public class SinglePlayerPanel extends JPanel
    private Timer shiftTimer;
    private Timer shiftTimer1;
    private Timer slowDownTimer;
+   private Timer countdown;
 
    private ArrayList<Animatable> animationObjects;
    
@@ -40,6 +41,10 @@ public class SinglePlayerPanel extends JPanel
    private boolean leftshift;
    private boolean zero;
    
+   private boolean collisionWithSq;
+   private boolean collisionWithAq;
+   private boolean countdownActive;
+   
    //And we need to declare our square we can control with arrow keys as a field, separately from 
    //the arraylist, so we can give it specific commands outside the constructor.
    private ArrowkeySquare sq;
@@ -48,6 +53,10 @@ public class SinglePlayerPanel extends JPanel
    
    private int score1;
    private int score2;
+   private int number;
+   private Key keyListener;
+   
+   private SoundPlayer soundPlayer;
    
    
       
@@ -78,13 +87,16 @@ public class SinglePlayerPanel extends JPanel
       score1 = 0;
       score2 = 0;
       t = new Timer(5, new AnimationListener());
-      t.start();  //Animation starts, but square -won't move yet...
+       //Animation starts, but square -won't move yet...
       
       slowDownTimer = new Timer(500, new SlowDownListener());
       slowDownTimer.start();
       
+      soundPlayer = new SoundPlayer();
+      
       //Here's how to enable keyboard input:
-      addKeyListener(new Key());  //Key is a private class defined below
+      keyListener = new Key();
+      addKeyListener(keyListener); //Key is a private class defined below
       setFocusable(true);  //Don't forget this!
       
       left = false; //at the moment, the user is not pushing down the left arrow key, so "false"
@@ -97,7 +109,15 @@ public class SinglePlayerPanel extends JPanel
       arrowleft = false;
       leftshift = false;
       zero = false;
+      collisionWithSq = false;
+      collisionWithAq = false;
+      countdownActive = false;
    }
+   
+   public void addNotify() {
+        super.addNotify();
+        t.start();
+    }
    
    
    //overridden methods
@@ -134,7 +154,7 @@ public class SinglePlayerPanel extends JPanel
       myBuffer.drawString("BLUE", 830, 35); 
       myBuffer.setFont(new Font("Retro Gaming", Font.BOLD, 30));  //We'll use size 30 serif font, bold AND italic.
       myBuffer.setColor(Color.RED);
-      myBuffer.drawString("RED", 1020, 35); 
+      myBuffer.drawString("S-BOT", 1020, 35); 
       ImageIcon versus = new ImageIcon("image-removebg-preview.png");
       myBuffer.drawImage(versus.getImage(), 950, 10, 30, 30, null);
 
@@ -142,6 +162,19 @@ public class SinglePlayerPanel extends JPanel
       //Loop through the ArrayList of Animatable objects; do an animation step on each one & draw it
       for(Animatable animationObject : animationObjects)
       {
+         boolean currentCollisionWithSq = cr.collide(sq);
+         boolean currentCollisionWithAq = cr.collide(aq);
+
+         if (currentCollisionWithSq && !collisionWithSq) {
+            soundPlayer.playSound("kick-183936.wav");
+         }
+         collisionWithSq = currentCollisionWithSq;
+
+         if (currentCollisionWithAq && !collisionWithAq) {
+            soundPlayer.playSound("kick-183936.wav");
+         }
+         collisionWithAq = currentCollisionWithAq;
+         
          if(cr.collide(sq))
          {
             double threefourths = 3/4;
@@ -236,8 +269,17 @@ public class SinglePlayerPanel extends JPanel
             if(cr.getX() >= (1920 - cr.getXSide()) && cr.getY() > 440 && (cr.getY() + cr.getYSide()) < 640)
             {
                score2++;
-               cr.setX(960);
-               cr.setY(540);
+               soundPlayer.playSound("bet-365-goal-sound-[AudioTrimmer.com].wav");
+               cr.setX(940);
+               cr.setY(520);
+               sq.setX(50);
+               sq.setY(540);
+               aq.setX(1820);
+               aq.setY(540);
+               if(score2 < 15)
+               {
+                  startCountdown();
+               }
                double randomOfTwoInts = Math.random();
                if(randomOfTwoInts < 0.5)
                {
@@ -252,8 +294,17 @@ public class SinglePlayerPanel extends JPanel
             if(cr.getX() <= 0 && cr.getY() > 440 && (cr.getY() + cr.getYSide()) < 640)
             {
                score1++;
-               cr.setX(960);
-               cr.setY(540);
+               soundPlayer.playSound("bet-365-goal-sound-[AudioTrimmer.com].wav");
+               cr.setX(940);
+               cr.setY(520);
+               sq.setX(50);
+               sq.setY(540);
+               aq.setX(1820);
+               aq.setY(540);
+               if(score1 < 15)
+               {
+                  startCountdown();
+               }
                double randomOfTwoInts = Math.random();
                if(randomOfTwoInts < 0.5)
                {
@@ -273,6 +324,64 @@ public class SinglePlayerPanel extends JPanel
          if(score1 >= 15 || score2 >=15)
          {
             t.stop();
+            soundPlayer.playSound("victory-1-90174.wav");
+            if(score1 >= 15)
+            {
+               myBuffer.setFont(new Font("Retro Gaming", Font.BOLD, 100));  //We'll use size 30 serif font, bold AND italic.
+               myBuffer.setColor(Color.RED);
+               myBuffer.drawString("S-BOT Wins", 725, 500);     
+            }
+            if(score2 >= 15)
+            {
+               myBuffer.setFont(new Font("Retro Gaming", Font.BOLD, 100));  //We'll use size 30 serif font, bold AND italic.
+               myBuffer.setColor(Color.BLUE);
+               myBuffer.drawString("Blue Wins", 715, 500);     
+            }  
+         }
+         int xcordofball = (int)(cr.getX() + cr.getXSide()/2);
+         int ycordofball = (int)(cr.getY() + cr.getXSide()/2);
+         int xcordofbot = (int)(aq.getX() + aq.getXSide()/2);
+         int ycordofbot = (int)(aq.getY() + aq.getXSide()/2);
+         int slope = 0;
+         if((xcordofball - xcordofbot) != 0)
+         {
+            slope = (int)(ycordofball - ycordofbot)/(xcordofball - xcordofbot);
+            if(xcordofbot > xcordofball)
+            {
+               aq.setDX(-5);
+            }
+            if(xcordofbot < xcordofball)
+            {
+               aq.setDX(5);
+            }
+            if(ycordofbot < ycordofball)
+            {
+               aq.setDY(Math.abs(slope));
+            }
+            if(ycordofbot > ycordofball)
+            {
+               aq.setDY(-1 * Math.abs(slope));
+            }
+         }
+         if((xcordofball - xcordofbot) == 0)
+         {
+            if(ycordofbot > ycordofball)
+            {
+               aq.setDY(-5);
+            }
+            if(ycordofbot < ycordofball)
+            {
+               aq.setDY(5);
+            }
+            else
+            {
+               aq.setDY(0);
+            }
+         }
+         if(countdownActive)
+         {
+            aq.setDX(0);
+            aq.setDY(0);
          }
          animationObject.step();  
          animationObject.drawMe(myBuffer);
@@ -285,9 +394,48 @@ public class SinglePlayerPanel extends JPanel
       myBuffer.setColor(Color.WHITE);
       myBuffer.drawString(Integer.toString(score2), 735, 35);
       
+      if (countdownActive) {
+                     myBuffer.setFont(new Font("Retro Gaming", Font.BOLD, 100));
+                     myBuffer.setColor(Color.BLACK);
+                     if(number == 0)
+                     {
+                        myBuffer.drawString("GO", 890, 500);   
+                        soundPlayer.playSound("referee-whistle-blow-gymnasium-6320.wav");                     
+                     }
+                     else
+                     {
+                        myBuffer.drawString(Integer.toString(number), 930, 500);
+                     }
+                     cr.setDX(0);
+                     cr.setDY(0);
+                     sq.setDX(0);
+                     sq.setDY(0);
+                     removeKeyListener(keyListener);
+                     if(number == 0)
+                     {
+                        addKeyListener(keyListener);
+                     }
+                 }
+      
       //Call built-in JFrame method repaint(), which calls paintComponent, which puts the next frame on screen
       repaint();
    }
+   private void startCountdown() {
+        countdownActive = true;
+        number = 3;
+        countdown = new Timer(1000, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (number == 0) {
+                    countdown.stop();
+                    countdownActive = false;
+                    t.start();
+                } else {
+                    number-=1;
+                }
+            }
+        });
+        countdown.start();
+    }
    
    
    
@@ -361,50 +509,7 @@ public class SinglePlayerPanel extends JPanel
             });
             shiftTimer.start();
         }
-        private void startShiftTimer1(ArrowkeySquare c) 
-        {
-            shiftTimer1 = new Timer(100, new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    
-                        if(arrowright)
-                        {
-                           c.setDX(10);
-                        }
-                        if(arrowdown)
-                        {
-                           c.setDY(10);
-                        }
-                        if(arrowleft)
-                        {
-                           c.setDX(-10);
-                        }
-                        if(arrowup)
-                        {
-                           c.setDY(-10);
-                        }
-                        if(arrowright && arrowleft)
-                        {
-                           c.setDX(0);
-                        }
-                        if(arrowup && arrowdown)
-                        {
-                           c.setDY(0);
-                        }
-                        if(!arrowup && !arrowdown)
-                        {
-                           c.setDY(0);
-                        }
-                        if(!arrowleft && !arrowright)
-                        {
-                           c.setDX(0);
-                        }
-                       
-                    
-                }
-            });
-            shiftTimer1.start();
-        }
-
+        
         private void stopShiftTimer(ArrowkeySquare c) {
             if (shiftTimer != null) {
                 shiftTimer.stop();
@@ -426,39 +531,10 @@ public class SinglePlayerPanel extends JPanel
                 }
             }
         }
-        private void stopShiftTimer1(ArrowkeySquare c) {
-            if (shiftTimer1 != null) {
-                shiftTimer1.stop();
-                if(c.getDX() > 0)
-                {
-                     c.setDX(c.getDX() - 5);
-                }
-                if(c.getDY() > 0)
-                {
-                    c.setDY(c.getDY() - 5);
-                }
-                if(c.getDX() < 0)
-                {
-                    c.setDX(c.getDX() + 5);
-                }
-                if(c.getDY() < 0)
-                {
-                    c.setDY(c.getDY() + 5);
-                }
-            }
-        }
       public void keyPressed(KeyEvent e) //Make ONE method for key presses; this is overridden, and will be called whenever a key is pressed
       {
-         if(e.getKeyCode() == KeyEvent.VK_UP && !arrowup)
-         {   
-            aq.setDY(aq.getDY() - 5);
-            arrowup = true;
-         }  
-         if(e.getKeyCode() == KeyEvent.VK_DOWN && !arrowdown)
-         {   
-            aq.setDY(aq.getDY() + 5);
-            arrowdown = true;
-         }  
+         
+       
          if(e.getKeyCode() == KeyEvent.VK_W && !up)
          {   
             sq.setDY(sq.getDY() - 5);
@@ -469,16 +545,7 @@ public class SinglePlayerPanel extends JPanel
             sq.setDY(sq.getDY() + 5);
             down = true;
          }  
-         if(e.getKeyCode() == KeyEvent.VK_RIGHT && !arrowright)
-         {
-            aq.setDX(aq.getDX() + 5);
-            arrowright = true;
-         }
-         if(e.getKeyCode() == KeyEvent.VK_LEFT && !arrowleft)
-         {
-            aq.setDX(aq.getDX() -5);
-            arrowleft = true;
-         }
+
          if(e.getKeyCode() == KeyEvent.VK_D && !right)
          {
             sq.setDX(sq.getDX() + 5);
@@ -494,11 +561,7 @@ public class SinglePlayerPanel extends JPanel
             startShiftTimer(sq);
             leftshift = true;
          } 
-         if(e.getKeyCode() == KeyEvent.VK_INSERT && !zero)
-         {  
-            startShiftTimer1(aq);
-            zero = true;
-         } 
+
 
          
          // write code for the other keys here
@@ -508,26 +571,6 @@ public class SinglePlayerPanel extends JPanel
       
       public void keyReleased(KeyEvent e) //Also overridden; ONE method that will be called any time a key is released
       {
-         if(e.getKeyCode() == KeyEvent.VK_UP)
-         {   
-            aq.setDY(aq.getDY() + 5);
-            arrowup = false;
-         }  
-         if(e.getKeyCode() == KeyEvent.VK_DOWN)
-         {   
-            aq.setDY(aq.getDY() - 5);
-            arrowdown = false;
-         }  
-         if(e.getKeyCode() == KeyEvent.VK_RIGHT)
-         {   
-            aq.setDX(aq.getDX() -5);
-            arrowright = false;
-         }  
-         if(e.getKeyCode() == KeyEvent.VK_LEFT)
-         {   
-            aq.setDX(aq.getDX() +5);
-            arrowleft = false;
-         }   
          if(e.getKeyCode() == KeyEvent.VK_W)
          {   
             sq.setDY(sq.getDY() + 5);
@@ -554,16 +597,7 @@ public class SinglePlayerPanel extends JPanel
             leftshift = false;
 
          } 
-         if(e.getKeyCode() == KeyEvent.VK_INSERT)
-         {   
-            stopShiftTimer1(aq);
-            zero = false;
-
-         } 
-
-         
-         //write code for the other keys here
-         
+         //write code for the other keys here   
          
       }
    }
