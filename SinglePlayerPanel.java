@@ -1,5 +1,5 @@
-
-
+import java.io.*;
+import java.util.Scanner;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 
 
-public class SinglePlayerPanel extends JPanel
+public class SinglePlayerPanel extends JPanel implements SoccerMethods
 {
    //fields
    
@@ -40,6 +40,8 @@ public class SinglePlayerPanel extends JPanel
    private boolean arrowright;
    private boolean leftshift;
    private boolean zero;
+   
+   private Color[][] grid;
    
    private boolean collisionWithSq;
    private boolean collisionWithAq;
@@ -157,7 +159,53 @@ public class SinglePlayerPanel extends JPanel
       myBuffer.drawString("S-BOT", 1020, 35); 
       ImageIcon versus = new ImageIcon("image-removebg-preview.png");
       myBuffer.drawImage(versus.getImage(), 950, 10, 30, 30, null);
-
+      myBuffer.setColor(Color.BLACK);
+      myBuffer.fillRect(50, 0, 550, 5);
+      for(int i = 50; i <= 600; i += 50)
+      {
+         for(int w = 0; w < 50; w++)
+         {
+            myBuffer.drawRect(i, w, 5, 5);
+         }
+      }
+      myBuffer.fillRect(1320, 0, 550, 5);
+      for(int i = 1320; i <= 1870; i += 50)
+      {
+         for(int w = 0; w < 50; w++)
+         {
+            myBuffer.drawRect(i, w, 5, 5);
+         }
+      }
+      grid = new Color[25][25];
+        // Initialize the grid with random colors
+        for (int row = 0; row < 25; row++) {
+            for (int col = 0; col < 25; col++) {
+                grid[row][col] = randomColor();
+            }
+        }
+        for(int o = 62; o < 612; o+=50)
+        {
+           for(int j = 0; j < 25; j++)
+           {
+               for(int u = 0; u < 25; u++)
+               {
+                  myBuffer.setColor(grid[j][u]);
+                  myBuffer.fillRect(o+j, 12 + u, 1, 1);
+               }
+            }
+        }
+        for(int o = 1332; o < 1882; o+=50)
+        {
+           for(int j = 0; j < 25; j++)
+           {
+               for(int u = 0; u < 25; u++)
+               {
+                  myBuffer.setColor(grid[j][u]);
+                  myBuffer.fillRect(o+j, 12 + u, 1, 1);
+               }
+            }
+        }
+      
       
       //Loop through the ArrayList of Animatable objects; do an animation step on each one & draw it
       for(Animatable animationObject : animationObjects)
@@ -276,7 +324,7 @@ public class SinglePlayerPanel extends JPanel
                sq.setY(540);
                aq.setX(1820);
                aq.setY(540);
-               if(score2 < 15)
+               if(score2 < 3)
                {
                   startCountdown();
                }
@@ -301,7 +349,7 @@ public class SinglePlayerPanel extends JPanel
                sq.setY(540);
                aq.setX(1820);
                aq.setY(540);
-               if(score1 < 15)
+               if(score1 < 3)
                {
                   startCountdown();
                }
@@ -321,21 +369,43 @@ public class SinglePlayerPanel extends JPanel
                cr.setDX(cr.getDX());
             }
          }
-         if(score1 >= 15 || score2 >=15)
+         if(score1 >= 3 || score2 >=3)
          {
             t.stop();
             soundPlayer.playSound("victory-1-90174.wav");
-            if(score1 >= 15)
+            if(score1 >= 3)
             {
                myBuffer.setFont(new Font("Retro Gaming", Font.BOLD, 100));  //We'll use size 30 serif font, bold AND italic.
                myBuffer.setColor(Color.RED);
-               myBuffer.drawString("S-BOT Wins", 725, 500);     
+               myBuffer.drawString("S-BOT Wins", 725, 500);  
+               try
+               {
+                  File file = new File("output.txt");
+                  PrintWriter writer = new PrintWriter(new FileOutputStream(file));
+                  writer.println("Blue Score:" + Integer.toString(score2));
+                  writer.println("Bot Score:" + Integer.toString(score1));
+                  writer.close();
+               } catch (IOException e) {
+               e.printStackTrace();  
+            }  
+   
             }
-            if(score2 >= 15)
+            if(score2 >= 3)
             {
                myBuffer.setFont(new Font("Retro Gaming", Font.BOLD, 100));  //We'll use size 30 serif font, bold AND italic.
                myBuffer.setColor(Color.BLUE);
-               myBuffer.drawString("Blue Wins", 715, 500);     
+               myBuffer.drawString("Blue Wins", 715, 500);  
+               try
+               {
+                  File file = new File("output.txt");
+                  PrintWriter writer = new PrintWriter(new FileOutputStream(file));
+                  writer.println("Blue Score:" + Integer.toString(score2));
+                  writer.println("Bot Score:" + Integer.toString(score1));
+                  writer.close();
+               } catch (IOException e) {
+               e.printStackTrace();  
+            }  
+   
             }  
          }
          int xcordofball = (int)(cr.getX() + cr.getXSide()/2);
@@ -395,6 +465,8 @@ public class SinglePlayerPanel extends JPanel
       myBuffer.drawString(Integer.toString(score2), 735, 35);
       
       if (countdownActive) {
+               if(score1 < 3 && score2 < 3)
+               {
                      myBuffer.setFont(new Font("Retro Gaming", Font.BOLD, 100));
                      myBuffer.setColor(Color.BLACK);
                      if(number == 0)
@@ -410,17 +482,20 @@ public class SinglePlayerPanel extends JPanel
                      cr.setDY(0);
                      sq.setDX(0);
                      sq.setDY(0);
+                     sq.setX(50);
+                     sq.setY(540);
                      removeKeyListener(keyListener);
-                     if(number == 0)
+                     if(number <= 1)
                      {
                         addKeyListener(keyListener);
                      }
+                   }
                  }
       
       //Call built-in JFrame method repaint(), which calls paintComponent, which puts the next frame on screen
       repaint();
    }
-   private void startCountdown() {
+   public void startCountdown() {
         countdownActive = true;
         number = 3;
         countdown = new Timer(1000, new ActionListener() {
@@ -435,6 +510,12 @@ public class SinglePlayerPanel extends JPanel
             }
         });
         countdown.start();
+    }
+    private Color randomColor() {
+        int r = (int) (Math.random() * 256);
+        int g = (int) (Math.random() * 256);
+        int b = (int) (Math.random() * 256);
+        return new Color(r, g, b);
     }
    
    

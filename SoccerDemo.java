@@ -6,11 +6,11 @@ public class SoccerDemo
 {
    public static void main(String[] args)
    { 
-      JFrame frame = new JFrame("GUI with BorderLayout");
+      JFrame frame = new JFrame("Arcade Freestyle Soccer");
       frame.setSize(1920, 1080);
       frame.setLocation(20, 20);
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-      frame.setContentPane(new PanelSwapPanel(frame));
+      frame.setContentPane(new PanelSwapPanel1(frame));
       frame.setVisible(true);
    }
 }
